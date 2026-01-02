@@ -21,9 +21,6 @@ env/
 .DS_Store
 Thumbs.db
 
-# Render
-render.yaml
-
 # Environment variables
 .env
 .env.*
