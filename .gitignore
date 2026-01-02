@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+activate/
+ENV/
+env/
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Render
+render.yaml
+
+# Environment variables
+.env
+.env.*
+
+# Logs
+*.log
+
+# Misc
+*.sqlite3
+*.db
+
+# Ignore secrets
+secrets.*
