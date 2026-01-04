@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chat Widget Preview</title>
+</head>
+<body>
+
+<h2>Test Page</h2>
+<p>Scroll / click to test floating chat widget.</p>
+
+<!-- Floating Chat Button -->
+<div id="chat-toggle">💬</div>
+
+<!-- Chat Widget -->
+<div id="chat-widget">
+  <div id="chat-header">
+    Hanna’s AI Assistant
+    <span id="chat-close">×</span>
+  </div>
+
+  <div id="chat-messages"></div>
+
+  <div id="chat-input">
+    <input type="text" id="user-input" placeholder="Ask me anything..." />
+    <button id="send-btn">Send</button>
+  </div>
+</div>
+
+<style>
+  body { height: 2000px; }
+
+  #chat-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    background: #f4b6c2;
+    color: #fff;
+    font-size: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999;
+  }
+
+  #chat-widget {
+    position: fixed;
+    bottom: 90px;
+    right: 24px;
+    width: 320px;
+    height: 420px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    display: none;
+    flex-direction: column;
+    z-index: 9999;
+    font-family: Arial, sans-serif;
+  }
+
+  #chat-header {
+    padding: 12px;
+    background: #f4b6c2;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #chat-close {
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+  #chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    font-size: 14px;
+  }
+
+  .message { margin-bottom: 10px; }
+  .user { text-align: right; color: #333; }
+  .assistant { text-align: left; color: #555; }
+
+  #chat-input {
+    display: flex;
+    border-top: 1px solid #eee;
+  }
+
+  #chat-input input {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    outline: none;
+  }
+
+  #chat-input button {
+    background: #f4b6c2;
+    color: white;
+    border: none;
+    padding: 0 16px;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById("chat-toggle");
+  const widget = document.getElementById("chat-widget");
+  const closeBtn = document.getElementById("chat-close");
+  const sendBtn = document.getElementById("send-btn");
+  const input = document.getElementById("user-input");
+  const messages = document.getElementById("chat-messages");
+
+  toggle.onclick = () => widget.style.display = "flex";
+  closeBtn.onclick = () => widget.style.display = "none";
+
+  function addMessage(text, sender) {
+    const div = document.createElement("div");
+    div.className = `message ${sender}`;
+    div.innerText = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage(text, "user");
+    input.value = "";
+
+    input.disabled = true;
+    sendBtn.disabled = true;
+
+    addMessage("Typing...", "assistant");
+
+    try {
+        const res = await fetch("http://localhost:8000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            message: text,
+            session_id: localStorage.getItem("chat_session") || null
+            })
+        });
+
+        const data = await res.json();
+        localStorage.setItem("chat_session", data.session_id);
+
+        messages.lastChild.remove();
+        addMessage(data.response, "assistant");
+    } catch (err) {
+        messages.lastChild.remove();
+        addMessage("Error: Could not get response.", "assistant");
+    } finally {
+        input.disabled = false;
+        sendBtn.disabled = false;
+        input.focus();
+    }
+  }
+
+  sendBtn.addEventListener("click", sendMessage);
+  input.addEventListener("keypress", (e) => {
+    if (e.key === "Enter" && !input.disabled) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+</script>
+
+</body>
+</html>
