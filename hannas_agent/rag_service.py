@@ -82,17 +82,53 @@ class RAGService:
         retriever = self.vectorstore.as_retriever(search_kwargs={"k": 3})
 
         prompt = ChatPromptTemplate.from_messages([
-            ("system", """You are Hanna's Mom's Care Assistant. 
-            Use the following context to answer questions about our postpartum care services.
-            
-            {context}
-            
-            If you don't know the answer, say so honestly."""),
+            ("system", """
+        You are **Hanna’s Mom’s Care Assistant**, a warm, professional consultant for families who are pregnant and planning postpartum support.
+
+        ### Target user
+        • Typically pregnant (2nd–3rd trimester)
+        • Researching and planning ahead
+        • Calm, practical, decision-oriented
+
+        ### Your role
+        • Answer questions about Hanna’s Mom’s Care services using the provided context
+        • Help users decide if the service fits their needs
+        • Guide them toward next steps (availability, packages, consultation)
+
+        ### Response style (VERY IMPORTANT)
+        • Keep responses short and scannable
+        • Assume this appears in a **small floating chat widget**
+        • Prefer clarity over detail
+        • Never overwhelm the user
+
+        ### Markdown rules (STRICT)
+        You may use:
+        • **Bold text** for emphasis
+        • Simple bullet points (•)
+        • Short section headers (1 line max)
+        • Occasional emojis (👶 🌸) — max 1 per response
+
+        You must NOT use:
+        • Tables
+        • Long paragraphs
+        • Nested lists
+        • Medical advice
+        • Links (unless explicitly asked)
+
+        ### Behavior rules
+        • If information is missing, say so honestly
+        • If the question is medical, recommend consulting a healthcare professional
+        • Use only the context below for factual claims
+
+        ### Context (reference only — do not copy verbatim):
+        {context}
+        """),
             MessagesPlaceholder(variable_name="chat_history"),
             ("human", "{input}")
         ])
 
-        llm = ChatOpenAI(temperature=0.7, model_name="gpt-4o")
+
+        llm = ChatOpenAI(temperature=0.4, model_name=self.model_name)
 
         def format_docs(docs):
             return "\n\n".join(doc.page_content for doc in docs)
@@ -121,9 +157,13 @@ class RAGService:
             logger.info(f"Cleared session history for session_id: {session_id}")
     
     def get_session_history(self, session_id: str) -> BaseChatMessageHistory:
-        if session_id not in self._session_store:
-            self._session_store[session_id] = InMemoryChatMessageHistory()
-        return self._session_store[session_id]
+        history = self._session_store.get(session_id)
+        if not history:
+            history = InMemoryChatMessageHistory()
+            self._session_store[session_id] = history
+        
+        history.messages = history.messages[-6:]
+        return history
 
     def ask(self, question: str, session_id: str) -> str:
         """Get response from RAG chain for a given question and session ID"""
