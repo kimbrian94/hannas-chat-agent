@@ -28,8 +28,6 @@
 </div>
 
 <style>
-  body { height: 2000px; }
-
   #chat-toggle {
     position: fixed;
     bottom: 24px;
@@ -44,7 +42,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 9999;
+    z-index: 2147483647; /* Very high z-index for Wix */
   }
 
   #chat-widget {
@@ -55,10 +53,10 @@
     height: 420px;
     background: #fff;
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     display: none;
     flex-direction: column;
-    z-index: 9999;
+    z-index: 2147483647; /* Very high z-index for Wix */
     font-family: Arial, sans-serif;
   }
 
@@ -70,6 +68,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-radius: 12px 12px 0 0;
   }
 
   #chat-close {
@@ -98,6 +97,7 @@
     border: none;
     padding: 10px;
     outline: none;
+    border-radius: 0 0 0 12px;
   }
 
   #chat-input button {
@@ -106,6 +106,12 @@
     border: none;
     padding: 0 16px;
     cursor: pointer;
+    border-radius: 0 0 12px 0;
+  }
+
+  #chat-input button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 </style>
 
@@ -117,7 +123,10 @@
   const input = document.getElementById("user-input");
   const messages = document.getElementById("chat-messages");
 
-  toggle.onclick = () => widget.style.display = "flex";
+  toggle.onclick = () => {
+    widget.style.display = "flex";
+    input.focus();
+  };
   closeBtn.onclick = () => widget.style.display = "none";
 
   function addMessage(text, sender) {
@@ -126,6 +135,7 @@
     div.innerText = text;
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
+    return div;
   }
 
   async function sendMessage() {
@@ -138,7 +148,7 @@
     input.disabled = true;
     sendBtn.disabled = true;
 
-    addMessage("Typing...", "assistant");
+    const typingMsg = addMessage("Typing...", "assistant");
 
     try {
         const res = await fetch("http://localhost:8000/chat", {
@@ -153,10 +163,10 @@
         const data = await res.json();
         localStorage.setItem("chat_session", data.session_id);
 
-        messages.lastChild.remove();
-        addMessage(data.response, "assistant");
+      typingMsg.remove();
+      addMessage(data.response, "assistant");
     } catch (err) {
-        messages.lastChild.remove();
+      typingMsg.remove();
         addMessage("Error: Could not get response.", "assistant");
     } finally {
         input.disabled = false;

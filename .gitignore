@@ -34,3 +34,10 @@ Thumbs.db
 
 # Ignore secrets
 secrets.*
+
+# Vector store data
+vector_store/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
