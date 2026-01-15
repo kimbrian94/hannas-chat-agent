@@ -1,5 +1,6 @@
 import os
 import logging
+import shutil
 from typing import List
 from pathlib import Path
 from langchain_community.document_loaders import DirectoryLoader, TextLoader, PyPDFLoader
@@ -26,6 +27,10 @@ class RAGService:
         self.vector_store_path = Path(vector_store_path) if vector_store_path else base_dir / "vector_store"
         self.model_name = model_name
 
+        prompt_path = base_dir / "prompts" / "system_prompt.txt"
+        with open(prompt_path, "r", encoding="utf-8") as f:
+            self.system_prompt = f.read()
+
         self.embeddings = OpenAIEmbeddings()
         self.vectorstore = None
         self.rag_chain = None
@@ -35,9 +40,12 @@ class RAGService:
 
     def setup(self):
         """One-time setup to initialize vector store and RAG chain"""
+        # Clear vector store directory if it exists
+        if self.vector_store_path.exists():
+            shutil.rmtree(self.vector_store_path)
+            logger.info(f"Cleared vector store at {self.vector_store_path}")
         self.load_and_index_documents()
         self.initialize_rag_chain()
-
     def load_and_index_documents(self):
         """Load documents from the documents directory"""
         logger.info(f"Loading documents from {self.document_path}")
@@ -46,8 +54,8 @@ class RAGService:
 
         loaders = [
             (DirectoryLoader(str(self.document_path), glob="**/*.pdf", loader_cls=PyPDFLoader), "PDF"),
-            (DirectoryLoader(str(self.document_path), glob="**/*.txt", loader_cls=TextLoader), "TXT"),
-            (DirectoryLoader(str(self.document_path), glob="**/*.md", loader_cls=TextLoader), "MD")
+            (DirectoryLoader(str(self.document_path), glob="**/*.txt", loader_cls=lambda p: TextLoader(p, encoding="utf-8")), "TXT"),
+            (DirectoryLoader(str(self.document_path), glob="**/*.md", loader_cls=lambda p: TextLoader(p, encoding="utf-8")), "MD")
         ]
 
         for loader, doc_type in loaders:
@@ -82,47 +90,7 @@ class RAGService:
         retriever = self.vectorstore.as_retriever(search_kwargs={"k": 3})
 
         prompt = ChatPromptTemplate.from_messages([
-            ("system", """
-        You are **Hanna’s Mom’s Care Assistant**, a warm, professional consultant for families who are pregnant and planning postpartum support.
-
-        ### Target user
-        • Typically pregnant (2nd–3rd trimester)
-        • Researching and planning ahead
-        • Calm, practical, decision-oriented
-
-        ### Your role
-        • Answer questions about Hanna’s Mom’s Care services using the provided context
-        • Help users decide if the service fits their needs
-        • Guide them toward next steps (availability, packages, consultation)
-
-        ### Response style (VERY IMPORTANT)
-        • Keep responses short and scannable
-        • Assume this appears in a **small floating chat widget**
-        • Prefer clarity over detail
-        • Never overwhelm the user
-
-        ### Markdown rules (STRICT)
-        You may use:
-        • **Bold text** for emphasis
-        • Simple bullet points (•)
-        • Short section headers (1 line max)
-        • Occasional emojis (👶 🌸) — max 1 per response
-
-        You must NOT use:
-        • Tables
-        • Long paragraphs
-        • Nested lists
-        • Medical advice
-        • Links (unless explicitly asked)
-
-        ### Behavior rules
-        • If information is missing, say so honestly
-        • If the question is medical, recommend consulting a healthcare professional
-        • Use only the context below for factual claims
-
-        ### Context (reference only — do not copy verbatim):
-        {context}
-        """),
+            ("system", self.system_prompt),
             MessagesPlaceholder(variable_name="chat_history"),
             ("human", "{input}")
         ])

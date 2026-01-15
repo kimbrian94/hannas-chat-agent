@@ -41,3 +41,6 @@ vector_store/
 # Jupyter Notebook
 .ipynb_checkpoints/
 *.ipynb
+
+# Sample documents
+documents-sample/
