@@ -46,7 +46,7 @@ Korean acupuncture-based massage that is highly effective for reducing swelling 
 - *Pricing based on the distance less than 20km from Yonge and Finch area*
 
 
-#### Add-On: Special Facial Massage (60 Minutes)
+#### Add-On to Special Full-Body Massage: Special Facial Massage (60 Minutes)
 Acupuncture-based facial massage that focuses on reducing swelling of face, neck, and shoulder area and the recovery of skin elasticity.
 
 - **10 sessions:** $900

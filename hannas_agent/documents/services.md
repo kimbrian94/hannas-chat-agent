@@ -84,9 +84,9 @@ We provide customized care based on individual needs, monitoring your physical h
 **Note:**
 - **NOT covered** by health insurance (different from RMT services)
 
----
+#### Add-On: Special Facial Massage (60 Minutes)
 
-### Special Facial Massage (60 Minutes)
+> **Important:** Special Facial Massage is only available as an add-on to the Special Full-Body Massage. It cannot be booked as a standalone service or combined with RMT massage. Receiving the Special Full-Body Massage is a pre-requisite for the facial massage add-on.
 
 Acupuncture-based facial massage targeting 37 energy points on the face that support reducing swelling and recovering skin elasticity. This massage focuses on reducing swelling of face, neck, and shoulder area and aims to tone the face shape using acupuncture-based techniques.
 

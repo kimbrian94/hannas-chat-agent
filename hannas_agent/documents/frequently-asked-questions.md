@@ -16,3 +16,11 @@ The answer is, no. There are nutrients and food items that are recommended for p
 You are not required to prepare anything! But if you like to plan ahead, we send you sample meal plans and a sample ingredient shopping list, so you can stock before the service starts. If you are unsure, you can request grocery shopping to your doula!
 
 
+### Can I have RMT (Registered Massage Therapy) and Facial Massage together?
+No, you cannot have both RMT massage and Facial Massage together. Special Facial Massage is only available as an add-on to the Special Full-Body Massage (non-RMT). You cannot receive facial massage as a standalone service or in combination with RMT massage. Receiving the Special Full-Body Massage is a pre-requisite for the facial massage add-on.
+
+### Can I get the Special Facial Massage by itself?
+No, the Special Facial Massage cannot be booked as a standalone service. It is only available as an add-on when you receive the Special Full-Body Massage (non-RMT).
+
+### Can I add the Special Facial Massage to RMT massage?
+No, the Special Facial Massage add-on is not available with RMT massage. It is exclusively an add-on to the Special Full-Body Massage (non-RMT).
