@@ -31,7 +31,7 @@ class RAGService:
         with open(prompt_path, "r", encoding="utf-8") as f:
             self.system_prompt = f.read()
 
-        self.embeddings = OpenAIEmbeddings()
+        self.embeddings = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
         self.vectorstore = None
         self.rag_chain = None
         self._session_store = {}
