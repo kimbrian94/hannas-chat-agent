@@ -1,14 +1,12 @@
 import os
-import logging
+from hannas_agent.config import logging_config
 import uuid
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from hannas_agent.rag_service import RAGService
 
-# Set up basic logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging_config.get_logger(__name__)
 
 app = FastAPI()
 

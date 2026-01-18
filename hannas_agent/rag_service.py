@@ -1,5 +1,5 @@
 import os
-import logging
+from hannas_agent.config import logging_config
 import shutil
 from typing import List
 from pathlib import Path
@@ -13,7 +13,7 @@ from langchain_core.runnables import RunnableWithMessageHistory, RunnablePassthr
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import StrOutputParser
 
-logger = logging.getLogger(__name__)
+logger = logging_config.get_logger(__name__)
 
 class RAGService:
     def __init__(
@@ -22,9 +22,6 @@ class RAGService:
             vector_store_path: str = None,
             model_name: str = "gpt-4o-mini"):
         
-        # debug lines
-        print("DEBUG ENV KEYS:", list(os.environ.keys()))
-        print("DEBUG OPENAI_API_KEY:", os.getenv("OPENAI_API_KEY"))
         base_dir = Path(__file__).parent
         self.document_path = Path(document_path) if document_path else base_dir / "documents"
         self.vector_store_path = Path(vector_store_path) if vector_store_path else base_dir / "vector_store"
