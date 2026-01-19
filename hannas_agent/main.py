@@ -11,24 +11,24 @@ from hannas_agent.rag_service import RAGService
 
 logger = logging_config.get_logger(__name__)
 
-# Custom middleware to add CORS headers to static files
-class StaticFilesCORSMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        response = await call_next(request)
-        if request.url.path.startswith("/static/"):
-            response.headers["Access-Control-Allow-Origin"] = "*"
-            response.headers["Access-Control-Allow-Methods"] = "GET, HEAD, OPTIONS"
-            response.headers["Access-Control-Allow-Headers"] = "*"
-        return response
+# # Custom middleware to add CORS headers to static files
+# class StaticFilesCORSMiddleware(BaseHTTPMiddleware):
+#     async def dispatch(self, request, call_next):
+#         response = await call_next(request)
+#         if request.url.path.startswith("/static/"):
+#             response.headers["Access-Control-Allow-Origin"] = "*"
+#             response.headers["Access-Control-Allow-Methods"] = "GET, HEAD, OPTIONS"
+#             response.headers["Access-Control-Allow-Headers"] = "*"
+#         return response
 
 app = FastAPI()
 
-app.add_middleware(StaticFilesCORSMiddleware)
+# app.add_middleware(StaticFilesCORSMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
+    allow_origins=["https://www.hannasmomscare.com"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
