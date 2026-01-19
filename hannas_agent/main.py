@@ -1,11 +1,14 @@
 import os
+
 from hannas_agent.config import logging_config
 import uuid
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from starlette.middleware.base import BaseHTTPMiddleware
+# from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+from starlette.responses import FileResponse
 from pydantic import BaseModel
 from hannas_agent.rag_service import RAGService
 
@@ -37,6 +40,13 @@ app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 # Initialize RAG service
 rag_service = None
+
+# Serve static files manually to include CORS headers
+@app.get("/static/{file_path:path}")
+async def serve_static(file_path: str, request: Request):
+    response = FileResponse(f"static/{file_path}")
+    response.headers["Access-Control-Allow-Origin"] = "https://www.hannasmomscare.com"
+    return response
 
 @app.on_event("startup")
 async def startup_event():
