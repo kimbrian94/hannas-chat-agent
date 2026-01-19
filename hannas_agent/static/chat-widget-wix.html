@@ -1,0 +1,28 @@
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://hannas-chat-agent-production.up.railway.app/static/chat-widget.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://hannas-chat-agent-production.up.railway.app/static/chat-widget.css">
+
+<!-- Floating Chat Button -->
+<div id="chat-toggle">💬</div>
+
+<!-- Speech Bubble -->
+<div id="speech-bubble">👋 Have a question?</div>
+
+<!-- Chat Widget -->
+<div id="chat-widget">
+  <div id="chat-header">
+    Hanna's AI Care Concierge
+    <span id="chat-close">×</span>
+  </div>
+
+  <div id="chat-messages"></div>
+
+  <div id="chat-input">
+    <input type="text" id="user-input" placeholder="Ask me anything..." />
+    <button id="send-btn" class="icon-btn" title="Send message" aria-label="Send message">➤</button>
+  </div>
+</div>
+
