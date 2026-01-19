@@ -133,7 +133,7 @@
   #chat-messages {
     flex: 1;
     padding: 16px;
-    font-size: 14px;
+    font-size: 13px;
     gap: 12px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -152,7 +152,7 @@
 
   #chat-input input {
     flex: 1;
-    font-size: 16px; /* prevents iOS zoom on focus */
+    font-size: 14px; /* slightly reduced on mobile to improve fit */
     padding: 12px 14px;
     border-radius: 12px;
     border: 2px solid #f0f0f0;
@@ -170,6 +170,7 @@
   .message {
     max-width: 92%;
     padding: 10px 12px;
+    font-size: 13px;
   }
 }
 

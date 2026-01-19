@@ -30,7 +30,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://www.hannasmomscare.com"],
+    allow_origins=["*"],
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
@@ -42,11 +42,11 @@ app.mount("/static", StaticFiles(directory=static_dir), name="static")
 rag_service = None
 
 # Serve static files manually to include CORS headers
-@app.get("/static/{file_path:path}")
-async def serve_static(file_path: str, request: Request):
-    response = FileResponse(f"static/{file_path}")
-    response.headers["Access-Control-Allow-Origin"] = "https://www.hannasmomscare.com"
-    return response
+# @app.get("/static/{file_path:path}")
+# async def serve_static(file_path: str, request: Request):
+#     response = FileResponse(f"static/{file_path}")
+#     response.headers["Access-Control-Allow-Origin"] = "https://www.hannasmomscare.com"
+#     return response
 
 @app.on_event("startup")
 async def startup_event():
