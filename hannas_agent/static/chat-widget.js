@@ -1,11 +1,3 @@
-const toggle = document.getElementById("chat-toggle");
-const widget = document.getElementById("chat-widget");
-const closeBtn = document.getElementById("chat-close");
-const speechBubble = document.getElementById("speech-bubble");
-const sendBtn = document.getElementById("send-btn");
-const input = document.getElementById("user-input");
-const messages = document.getElementById("chat-messages");
-
 // Rotating system greetings
 const GREETINGS = [
   "🌸 Hi! I’m Hanna's AI Care Concierge. How can I support you and your baby today?",
@@ -14,6 +6,42 @@ const GREETINGS = [
   "🌷 Welcome! I’m your postpartum support assistant. Ask me anything about caring for you and your newborn.",
   "🤱 Hi! Congratulations on your new arrival! How can I assist you today with baby care or postpartum needs?"
 ];
+
+document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.getElementById("chat-toggle");
+    const widget = document.getElementById("chat-widget");
+    const closeBtn = document.getElementById("chat-close");
+    const speechBubble = document.getElementById("speech-bubble");
+    const sendBtn = document.getElementById("send-btn");
+    const input = document.getElementById("user-input");
+    const messages = document.getElementById("chat-messages");
+
+    toggle.onclick = () => {
+    widget.style.display = "flex";
+    speechBubble.style.display = "none";
+    // Lock body scroll on mobile to prevent displacement
+    if (window.innerWidth <= 768) {
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.height = '100%';
+    }
+    // Show rotating system greeting if there are no messages yet
+    showInitialGreetingIfNeeded();
+    input.focus();
+    };
+    closeBtn.onclick = () => {
+    widget.style.display = "none";
+    speechBubble.style.display = "block";
+    // Unlock body scroll
+    if (window.innerWidth <= 768) {
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.height = '';
+    }
+    };
+});
 
 function showInitialGreetingIfNeeded() {
   // Only add greeting if there are no messages yet
@@ -27,31 +55,7 @@ function showInitialGreetingIfNeeded() {
   localStorage.setItem('hanna_greeting_index', String((idx + 1) % GREETINGS.length));
 }
 
-toggle.onclick = () => {
-  widget.style.display = "flex";
-  speechBubble.style.display = "none";
-  // Lock body scroll on mobile to prevent displacement
-  if (window.innerWidth <= 768) {
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100%';
-    document.body.style.height = '100%';
-  }
-  // Show rotating system greeting if there are no messages yet
-  showInitialGreetingIfNeeded();
-  input.focus();
-};
-closeBtn.onclick = () => {
-  widget.style.display = "none";
-  speechBubble.style.display = "block";
-  // Unlock body scroll
-  if (window.innerWidth <= 768) {
-    document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.width = '';
-    document.body.style.height = '';
-  }
-};
+
 
 function addMessage(text, sender, isMarkdown = false) {
   const div = document.createElement("div");
