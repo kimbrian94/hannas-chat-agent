@@ -5,12 +5,25 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.base import BaseHTTPMiddleware
 from pydantic import BaseModel
 from hannas_agent.rag_service import RAGService
 
 logger = logging_config.get_logger(__name__)
 
+# Custom middleware to add CORS headers to static files
+class StaticFilesCORSMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        if request.url.path.startswith("/static/"):
+            response.headers["Access-Control-Allow-Origin"] = "*"
+            response.headers["Access-Control-Allow-Methods"] = "GET, HEAD, OPTIONS"
+            response.headers["Access-Control-Allow-Headers"] = "*"
+        return response
+
 app = FastAPI()
+
+app.add_middleware(StaticFilesCORSMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,7 +34,6 @@ app.add_middleware(
 
 static_dir = Path(__file__).parent / "static"
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
-
 
 # Initialize RAG service
 rag_service = None
